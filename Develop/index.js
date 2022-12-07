@@ -5,27 +5,32 @@ const inquirer = require('inquirer');
 const fs = require('fs');
 
 var tableContents = []
-const getContent = (badges,features,contributions,tests) =>{
-    var textOut = '\n## Table Of Contents\n\n - [Installation](#installation)\n - [Usage](#usage)\n - [Credits](#credits)\n - [License](#license)';
-    if (badges!=null) textOut = textOut.concat(`\n - [Badges](#badges)`); 
-    if (features!=null) textOut = textOut.concat(`\n - [Features](#features)`); 
-    if (contributions!=null) textOut = textOut.concat(`\n - [Contributions](#contributions)`); 
-    if (tests!=null) textOut = textOut.concat(`\n - [Tests](#tests)`);
+const getContent = (install,usage,credits,license,badges,features,contributions,tests) =>{
+    var textOut = `\n## Table Of Contents\n\n`;
+    if (install!='') textOut = textOut.concat(`\n - [Installation](#install)`); 
+    if (usage!='') textOut = textOut.concat(`\n - [Usage](#usage)`); 
+    if (credits!='') textOut = textOut.concat(`\n - [Credits](#credits)`); 
+    if (license!='') textOut = textOut.concat(`\n - [License](#license)`); 
+    if (badges!=''&&badges!=null) textOut = textOut.concat(`\n - [Badges](#badges)`); 
+    if (features!=''&&features!=null) textOut = textOut.concat(`\n - [Features](#features)`); 
+    if (contributions!=''&&contributions!=null) textOut = textOut.concat(`\n - [Contributions](#contributions)`); 
+    if (tests!=''&&tests!=null) textOut = textOut.concat(`\n - [Tests](#tests)`);
     textOut = textOut.concat(`\n`);
     return (textOut);
 }
 
 const createReadMe = ({title,description,content,install,usage,credits,license,badges,features,contributions,tests})=>
 `## README: ${title}\n
-## Description\n\n${description}\n${content? getContent(badges,features,contributions,tests) :``} 
-## Installation\n\n${install}\n
-## Usage\n\n${usage}\n
-## Credits\n\n${credits}\n
-## License\n\n${license}\n
-## Badges\n\n${badges}\n
-## Features\n\n${features}\n
-## Contributions\n\n${contributions}\n
-## Tests\n\n${tests}\n`
+## Description\n\n${description}\n
+${content? getContent(install,usage,credits,license,badges,features,contributions,tests) :``} 
+${install? `## Installation\n\n${install}`:``}\n
+${usage? `## Usage\n\n${usage}`:``}\n
+${credits? `## Credits\n\n${credits}`:``}\n
+${license? `## License\n\n${license}`:``}\n
+${badges? `## Badges\n\n${badges}`:``}\n
+${features? `## Features\n\n${features}`:``}\n
+${contributions? `## Contributions\n\n${contributions}`:``}\n
+${tests? `## Tests\n\n${tests}`:``}\n`
 
 // TODO: Create an array of questions for user input
 const questions = {
@@ -125,6 +130,7 @@ inquirer
   .then((response) =>{
     const readMeDoc = createReadMe(response)
     console.log(readMeDoc); 
+    console.log(response);
   });
 
 // TODO: Create a function to write README file
