@@ -18,124 +18,124 @@ const questions = {
     getContributions: "If other developers are allowed to contribute to this application, include guidelines for how to do so.\n  The [Contributor Covenant](https://www.contributor-covenant.org/) is an industry standard,\n  but you can always write your own if you'd prefer.\n>",
     getTests: "Go the extra mile and write tests for this application. Then provide examples on how to run them here.\n>"
 }
-const generateTOC = (install,usage,credits,license,badges,features,contributions,tests) =>{ //generate table of contents
-    var textOut = `\n## Table Of Contents\n\n`;
-    if (install) textOut = textOut.concat(`\n - [Installation](#install)`);     //only include items in TOC if user responded to question
-    if (usage) textOut = textOut.concat(`\n - [Usage](#usage)`);                //eg if usage was answered then include uaage in TOC
-    if (credits) textOut = textOut.concat(`\n - [Credits](#credits)`); 
-    if (license) textOut = textOut.concat(`\n - [License](#license)`); 
-    if (badges) textOut = textOut.concat(`\n - [Badges](#badges)`); 
-    if (features) textOut = textOut.concat(`\n - [Features](#features)`); 
-    if (contributions) textOut = textOut.concat(`\n - [Contributions](#contributions)`); 
-    if (tests) textOut = textOut.concat(`\n - [Tests](#tests)`);
-    textOut = textOut.concat(`\n`);
-    return (textOut);
-}
+const generateTOC = (install,usage,credits,license,badges,features,contributions,tests) => //generate table of contents  
+    `${`## Table of Contents\n`}`+
+    `${install? `\n - [Installation](#install)`:``}`+     //only include items in TOC if user responded to question
+    `${usage? `\n - [Usage](#usage)`:``}`+                //eg if usage was answered then include usage in TOC
+    `${credits? `\n - [Credits](#credits)`:``}`+ 
+    `${license? `\n - [License](#license)`:``}`+ 
+    `${badges? `\n - [Badges](#badges)`:``}`+ 
+    `${features? `\n - [Features](#features)`:``}`+ 
+    `${contributions? `\n - [Contributions](#contributions)`:``}`+ 
+    `${tests? `\n - [Tests](#tests)`:``}`;
+ 
 const createReadMe = ({title,description,includeTOC,install,usage,credits,license,badges,features,contributions,tests})=>
 // creates README content, do not include titles of empty sections in final README, calls generateTOC   
-`# ${title.toUpperCase()}\n
-## Description\n\n${description}\n
-${includeTOC? generateTOC(install,usage,credits,license,badges,features,contributions,tests) :``} 
-${install? `## Installation\n\n${install}`:``}\n
-${usage? `## Usage\n\n${usage}`:``}\n
-${credits? `## Credits\n\n${credits}`:``}\n
-${license? `## License\n\n${license}`:``}\n
-${badges? `## Badges\n\n${badges}`:``}\n
-${features? `## Features\n\n${features}`:``}\n
-${contributions? `## Contributions\n\n${contributions}`:``}\n
-${tests? `## Tests\n\n${tests}`:``}\n`
-//
+    `${`# ${title.toUpperCase()}\n\n`}`+
+    `${`## Description\n\n${description}\n\n`}`+                          //always show description header              
+    `${includeTOC? generateTOC(install,usage,credits,license,badges,features,contributions,tests)+`\n\n` :``}`+ //generateTOC function
+    `${install? `## Installation\n\n${install}\n\n`:``}`+                 //display install section if any content  
+    `${usage? `## Usage\n\n${usage}\n\n`:``}`+                            //display usage section if any content
+    `${credits? `## Credits\n\n${credits}\n\n`:``}`+                      //display credits...  
+    `${license? `## License\n\n${license}\n\n`:``}`+                      //display license...
+    `${badges? `## Badges\n\n${badges}\n\n`:``}`+                         //display badges...
+    `${features? `## Features\n\n${features}\n\n`:``}`+                   //display features...  
+    `${contributions? `## Contributions\n\n${contributions}\n\n`:``}`+    //display contributions
+    `${tests? `## Tests\n\n${tests}\n\n`:``}`;                            //display tests              
+
 function isChecked(array,value){    //checks if checkbox was selected
     var isItIn = false;
     if (array) array.forEach (element => {if (element==value) isItIn = true}); //check every element in array to see if ==value
     return isItIn;
     }
-inquirer
-  .prompt([
-    {
-      type: 'input',
-      message: questions.getTitle,
-      name: 'title',
-    },
-    {
-      type: 'input',
-      message: questions.getDesc,
-      name: 'description',
-    },
-    {
-      type: 'confirm',                  //ask user if table of contents should be included
-      message: questions.getTOC,
-      name: 'includeTOC',      
-    },
-    {
-      type: 'input',
-      message: questions.getInstall,
-      name: 'install',
-    },
-    {
-      type: 'input',
-      message: questions.getUsage,
-      name: 'usage',
-    },
-    {
-      type: 'input',
-      message: questions.getCredits,
-      name: 'credits',
-    },
-    {
-      type: 'input',
-      message: questions.getLicense,
-      name: 'license',
-    },
-    {
-      type: 'confirm',
-      message: questions.getDetails,
-      name: 'details',
-    },
-    {
-      type: 'checkbox',
-      message: questions.getDetailList,
-      choices: ["Badges","Features","Contributions","Tests"],
-      name: 'detailList',
-      when: response => response.details == true,
-    },
-    {
-      type: 'input',
-      message: questions.getBadges,
-      name: 'badges',
-      when:  response => isChecked(response.detailList,"Badges"),         //only ask this question if badges was checked
-    },
-    {
-      type: 'input',
-      message: questions.getFeatures,
-      name: 'features',
-      when:  response => isChecked(response.detailList,"Features"),       //only ask this question if Features was checked
-    },
-    {
-      type: 'input',
-      message: questions.getContributions,
-      name: 'contributions',
-      when:  response => isChecked(response.detailList,"Contributions"),  //only ask this question if Contribution was checked
-    },
-    {
-      type: 'input',
-      message: questions.getTests,
-      name: 'tests',
-      when:  response => isChecked(response.detailList,"Tests"),    //only ask this question if Tests was checked
-    },
-  ])
-  .then((response) =>{
-    const readMeDoc = createReadMe(response);       //generate README
-    writeToFile("README.md",readMeDoc);             //output README to file
-    console.log(readMeDoc); 
-    console.log(response);
-  });
 
 // TODO: Create a function to write README file
 function writeToFile(fileName, data) {}
 
 // TODO: Create a function to initialize app
  function init() {
+    inquirer
+  .prompt([
+    {
+      type: 'input',
+      message: questions.getTitle,               //ask user for title
+      name: 'title',
+    },
+    {
+      type: 'input',
+      message: questions.getDesc,                //ask user for description
+      name: 'description',
+    },
+    {
+      type: 'confirm',                           //ask user if table of contents should be included
+      message: questions.getTOC,
+      name: 'includeTOC',      
+    },
+    {
+      type: 'input',
+      message: questions.getInstall,             //ask user for installation instruction
+      name: 'install',
+    },
+    {
+      type: 'input',
+      message: questions.getUsage,               //ask user how software works
+      name: 'usage',
+    },
+    {
+      type: 'input',
+      message: questions.getCredits,             //ask user about colaborators, 3rd party api, etc
+      name: 'credits',
+    },
+    {
+      type: 'input',
+      message: questions.getLicense,             //ask user about licenses
+      name: 'license',
+    },
+    {
+      type: 'confirm',
+      message: questions.getDetails,             //ask user if to stop readme now or ask more questions
+      name: 'details',
+    },
+    {
+      type: 'checkbox',
+      message: questions.getDetailList,                                   //ask user to select choices from list
+      choices: ["Badges","Features","Contributions","Tests"],
+      name: 'detailList',
+      when: response => response.details == true,                         //only ask this if user selected 'Y' for add more details
+    },
+    {
+      type: 'input',
+      message: questions.getBadges,                                       //ask user about badges
+      name: 'badges',
+      when:  response => isChecked(response.detailList,"Badges"),         //only ask this question if badges was checked
+    },
+    {
+      type: 'input',
+      message: questions.getFeatures,                                     //ask user about program features                       
+      name: 'features',
+      when:  response => isChecked(response.detailList,"Features"),       //only ask this question if Features was checked
+    },
+    {
+      type: 'input',
+      message: questions.getContributions,                                //ask user how other can contribute              
+      name: 'contributions',
+      when:  response => isChecked(response.detailList,"Contributions"),  //only ask this question if Contribution was checked
+    },
+    {
+      type: 'input',
+      message: questions.getTests,                                        //ask user how to test software
+      name: 'tests',
+      when:  response => isChecked(response.detailList,"Tests"),          //only ask this question if Tests was checked
+    },
+  ])
+  .then((response) =>{
+    const readMeDoc = createReadMe(response);       //generate README
+    writeToFile("README.md",readMeDoc);             //output README to file
+    console.log(readMeDoc); 
+    console.log("The following information was written to README file:");
+    console.log(response);
+  });
+
  }
 
 // Function call to initialize app
