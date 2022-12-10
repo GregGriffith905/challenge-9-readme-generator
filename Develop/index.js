@@ -1,7 +1,7 @@
 // TODO: Include packages needed for this application 
-const inquirer = require('inquirer');        //CLI interface for node.js
-const fs = require('fs');                    //file system module              
-
+const generateMarkdown = require('./utils/generateMarkdown');    //import function to generate README  
+const inquirer = require('inquirer');                            //CLI interface for node.js
+const fs = require('fs');                                        //file system module              
 
 // TODO: Create an array of questions for user input
 const questions = {
@@ -22,51 +22,17 @@ const questions = {
     getGithub: "Enter your GitHub username: ",
     getEmail: "Enter your E-mail address: ",
 }
-const generateTOC = (install,usage,credits,license,badges,features,contributions,tests,github,email) => //generate table of contents  
-    `${`## Table of Contents\n\n`}`+
-    `${install? ` - [Installation](#install)\n`:``}`+     //only include items in TOC if user responded to question
-    `${usage? ` - [Usage](#usage)\n`:``}`+                //eg if usage was answered then include usage in TOC
-    `${credits? ` - [Credits](#credits)\n`:``}`+ 
-    `${license? ` - [License](#license)\n`:``}`+ 
-    `${badges? ` - [Badges](#badges)\n`:``}`+ 
-    `${features? ` - [Features](#features)\n`:``}`+ 
-    `${contributions? ` - [Contributions](#contributions)\n`:``}`+ 
-    `${tests? ` - [Tests](#tests)\n`:``}`+  
-    `${github||email? ` - [Questions](#questions)\n`:``}`;
- 
-const generateQues = (github,email) => //generate the questions section of the README
-    `${github||email? `## Questions\n\n`:``}`+                            //display questions setion if any content
-    `${github? `GitHub: [${github}](https://github.com/${github}) \n\n`:``}`+  //display github... 
-    `${email? `E-Mail: [${email}](mailto:${email})\n\n`:``}`;                  //display email...  
-  
-const createReadMe = ({title,description,includeTOC,install,usage,credits,license,badges,features,contributions,tests,questions,github,email})=>
-// creates README content, do not include titles of empty sections in final README, calls generateTOC   
-    `${`# ${title.toUpperCase()}\n\n`}`+                                  //always show title
-    `${license? renderLicenseBadge(license):``}`+                         //display license badge if any selected  
-    `${license? renderLicenseLink(license):``}`+                          //display license link...  
-    `${`## Description\n\n${description}\n\n`}`+                          //always show description header              
-    `${includeTOC? generateTOC(install,usage,credits,license,badges,features,contributions,tests,github,email)+`\n` :``}`+ //generateTOC function
-    `${install? `## Installation\n\n${install}\n\n`:``}`+                 //display install section if any content  
-    `${usage? `## Usage\n\n${usage}\n\n`:``}`+                            //display usage section if any content
-    `${credits? `## Credits\n\n${credits}\n\n`:``}`+                      //display credits...  
-    `${license? `## License\n\n${license}\n\n`:``}`+                      //display license...
-    `${badges? `## Badges\n\n${badges}\n\n`:``}`+                         //display badges...
-    `${features? `## Features\n\n${features}\n\n`:``}`+                   //display features...  
-    `${contributions? `## Contributions\n\n${contributions}\n\n`:``}`+    //display contributions...
-    `${tests? `## Tests\n\n${tests}\n\n`:``}`+                            //display tests...              
-    `${questions? generateQues(github,email)+`\n\n`:``}`;                 //display contact info...
-    
 function isChecked(array,value){    //checks if checkbox was selected
     var isItIn = false;
-    if (array) array.forEach (element => {if (element==value) isItIn = true}); //check every element in array to see if ==value
+    if (array) array.forEach (element => {if (element==value) isItIn = true}); //check every element in array to see if element==value
     return isItIn;
     }
-
 // TODO: Create a function to write README file
 function writeToFile(fileName, data) {
-  //  fs.write(filename,process.argv,err=>)
+  fs.writeFile(fileName, data, (err) =>
+  err ? console.error(err) : console.log('Success!')
+  )
 }
-
 // TODO: Create a function to initialize app
  function init() {
     inquirer
@@ -103,9 +69,10 @@ function writeToFile(fileName, data) {
     },
     {
       type: 'list',
-      message: questions.getLicense,             //ask user about licenses
-      choices : ["none","MIT License","GNU AGPLv3","GNU GPLv3","GNU LGPLv3","Boost Software License 1.0","Apache License 2.0","Mozilla Public License","The Unlicensed"],
+      message: questions.getLicense,                       //ask user about licenses
+      choices : ["None","MIT License","GNU AGPLv3","GNU GPLv3","GNU LGPLv3","Boost Software License 1.0","Apache License 2.0","Mozilla Public License","The Unlicense"],
       name: 'license',
+      filter(val){val=="None"? val="": null; return val},  //change "None" to "" so license returns false when treated as a boolean 
     },
     {
       type: 'confirm',                           //(Y/n)
@@ -164,13 +131,14 @@ function writeToFile(fileName, data) {
 
   ])
   .then((response) =>{
-    const readMeDoc = createReadMe(response);       //generate README
-    writeToFile("README.md",readMeDoc);             //output README to file
+    console.log(response.license);
+    const readMeDoc = generateMarkdown(response);       //generate README
+    writeToFile("README.md",readMeDoc);                 //call function to write file
     console.log(readMeDoc); 
-    console.log("The following information was written to README file:");
+    console.log("A README file was generated based on the following information you entered.\nnote: Sections left blank will be excluded");
     console.log(response);
   })
-  .catch(() => console.log("Oops, Something went wrong!"));     //error message to return on error
+  //.catch(() => console.log("Oops, Something went wrong!"));     //error message to return on error
  }
 // Function call to initialize app
 init();
