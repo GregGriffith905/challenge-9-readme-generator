@@ -4,7 +4,7 @@ const inquirer = require('inquirer');                            //CLI interface
 const fs = require('fs');                                        //file system module              
 
 // TODO: Create an array of questions for user input
-const questions = {
+const questions = {   //these question are passed as message in readmeInquiry
     getTitle: "What is the title of this project?\n>",
     getDesc: "Provide a short description explaining the what, why and how of this project.\n  Use the following questions as a guide:\n  \t-What was the motivation?\n  \t-Why was this project built?\n  \t-What problem does it solve?\n  \t-What did you learn?\n>",
     getTOC: "Include a Table of Contents for this project (Y/N)? \n>",
@@ -22,29 +22,16 @@ const questions = {
     getGithub: "Enter your GitHub username: ",
     getEmail: "Enter your E-mail address: ",
 }
-function isChecked(array,value){    //checks if checkbox was selected
-    var isItIn = false;
-    if (array) array.forEach (element => {if (element==value) isItIn = true}); //check every element in array to see if element==value
-    return isItIn;
-    }
-// TODO: Create a function to write README file
-function writeToFile(fileName, data) {
-  fs.writeFile(fileName, data, (err) =>
-  err ? console.error(err) : console.log('Success!')
-  )
-}
-// TODO: Create a function to initialize app
- function init() {
-    inquirer
-  .prompt([
+const readmeInquiry = [   //object array to be passed to inquirer
     {
       type: 'input',
-      message: questions.getTitle,               //ask user for title
+      message: questions.getTitle,                                                  //ask user for title
       name: 'title',
+      validate:(val)=> (val? true : "A project title is a required"),                   //this is a required field
     },
     {
       type: 'input',
-      message: questions.getDesc,                //ask user for description
+      message: questions.getDesc,                                                   //ask user for description
       name: 'description',
     },
     {
@@ -69,10 +56,10 @@ function writeToFile(fileName, data) {
     },
     {
       type: 'list',
-      message: questions.getLicense,                       //ask user about licenses
-      choices : ["None","MIT License","GNU AGPLv3","GNU GPLv3","GNU LGPLv3","Boost Software License 1.0","Apache License 2.0","Mozilla Public License","The Unlicense"],
+      message: questions.getLicense,             //ask user about licenses
+      choices : ["None","MIT License","GNU AGPLv3","GNU GPLv3","GNU LGPLv3","Boost Software License 1.0","Apache License 2.0","Mozilla Public License 2.0","The Unlicense"],
       name: 'license',
-      filter(val){val=="None"? val="": null; return val},  //change "None" to "" so license returns false when treated as a boolean 
+      filter:(val)=>(val=="None"? null : val), //change "None" to null to make it falsy (see generateIndex.js line 94)
     },
     {
       type: 'confirm',                           //(Y/n)
@@ -110,7 +97,6 @@ function writeToFile(fileName, data) {
       name: 'tests',
       when:  response => isChecked(response.detailList,"Tests"),          //only ask this question if Tests was checked
     },
-    
     {
       type: 'confirm',
       message: questions.getQuestions,                                    //ask user how to include contact into
@@ -128,17 +114,24 @@ function writeToFile(fileName, data) {
       name: 'email',
       when:  response => response.questions == true,                      //only ask this question if selected 'Y' for contact info
     },
-
-  ])
+]
+function isChecked(array,value){    //checks if checkbox was selected
+    var isItIn = false;
+    if (array) array.forEach (element => {if (element==value) isItIn = true}); //check every element in array to see if element==value
+    return isItIn;
+}
+// TODO: Create a function to write README file
+function writeToFile(fileName, data) {   //write  file to data
+  fs.writeFile(fileName, data, (err) => err ? console.error(err) : console.log('README created successfully'));
+}
+// TODO: Create a function to initialize app
+ function init() {
+  inquirer.prompt(readmeInquiry)
   .then((response) =>{
-    console.log(response.license);
     const readMeDoc = generateMarkdown(response);       //generate README
     writeToFile("README.md",readMeDoc);                 //call function to write file
-    console.log(readMeDoc); 
-    console.log("A README file was generated based on the following information you entered.\nnote: Sections left blank will be excluded");
-    console.log(response);
   })
   //.catch(() => console.log("Oops, Something went wrong!"));     //error message to return on error
- }
+}
 // Function call to initialize app
 init();
