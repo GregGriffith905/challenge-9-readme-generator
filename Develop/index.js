@@ -1,5 +1,8 @@
 // TODO: Include packages needed for this application 
-const generateMarkdown = require('./utils/generateMarkdown');    //import function to generate README  
+const importedModule = require('./utils/generateMarkdown');    //import function to generate README
+const generateMarkdown = importedModule.generateMarkdown;   //import function to generate README
+const licenceInfo = importedModule.licenseInfo;    //import function to generate README
+
 const inquirer = require('inquirer');                            //CLI interface for node.js
 const fs = require('fs');                                        //file system module              
 
@@ -27,7 +30,7 @@ const readmeInquiry = [   //object array to be passed to inquirer
       type: 'input',
       message: questions.getTitle,                                                  //ask user for title
       name: 'title',
-      validate:(val)=> (val? true : "A project title is a required"),                   //this is a required field
+      validate:(val)=> (val? true : "A project title is a required"),               //this is a required field
     },
     {
       type: 'input',
@@ -57,9 +60,9 @@ const readmeInquiry = [   //object array to be passed to inquirer
     {
       type: 'list',
       message: questions.getLicense,             //ask user about licenses
-      choices : ["None","MIT License","GNU AGPLv3","GNU GPLv3","GNU LGPLv3","Boost Software License 1.0","Apache License 2.0","Mozilla Public License 2.0","The Unlicense"],
+      choices : Object.keys(licenceInfo),        //get choices directly from licenseInfo object (see generateMarkdown.js line 1)
       name: 'license',
-      filter:(val)=>(val=="None"? null : val), //change "None" to null to make it falsy (see generateIndex.js line 94)
+      filter:(val)=>(val=="None"? null : val),  //change "None" to null to make it falsy (see generateMarkdown.js line 87,93,94)
     },
     {
       type: 'confirm',                           //(Y/n)
