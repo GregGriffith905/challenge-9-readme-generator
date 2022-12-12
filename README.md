@@ -6,6 +6,7 @@ The project was creatied to solve a homework assignment. It simplifies the proce
 
 ## Table of Contents
 
+- [Walkthrough](#walkthrough)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Credits](#credits)
@@ -13,7 +14,7 @@ The project was creatied to solve a homework assignment. It simplifies the proce
 - [Features](#features)
 - [Questions](#questions)
 
-## Video Walkthrough
+## Walkthrough
 ```md
 [![videolink](./Develop/videowalkthrough.jpeg)](https://drive.google.com/file/d/1NlbRsQo8tuBlNR1dzByz9EYo_FSYoI_s/view
 )
