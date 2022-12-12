@@ -1,10 +1,10 @@
 // TODO: Include packages needed for this application 
-const importedModule = require('./utils/generateMarkdown');    //import function to generate README
-const generateMarkdown = importedModule.generateMarkdown;   //import function to generate README
-const licenceInfo = importedModule.licenseInfo;    //import function to generate README
-
 const inquirer = require('inquirer');                            //CLI interface for node.js
-const fs = require('fs');                                        //file system module              
+const fs = require('fs');                                        //file system module 
+
+const importedModule = require('./utils/generateMarkdown');      //import function to generate README
+const generateMarkdown = importedModule.generateMarkdown;       
+const licenceInfo = importedModule.licenseInfo;                  
 
 // TODO: Create an array of questions for user input
 const questions = {   //these question are passed as message in readmeInquiry
@@ -62,7 +62,7 @@ const readmeInquiry = [   //object array to be passed to inquirer
       message: questions.getLicense,             //ask user about licenses
       choices : Object.keys(licenceInfo),        //get choices directly from licenseInfo object (see generateMarkdown.js line 1)
       name: 'license',
-      filter:(val)=>(val=="None"? null : val),  //change "None" to null to make it falsy (see generateMarkdown.js line 87,93,94)
+      filter:(val)=>(val=="None"? null : val),  //change "None" to null to make it falsy (see generateMarkdown.js line 78,84)
     },
     {
       type: 'confirm',                           //(Y/n)
@@ -124,17 +124,17 @@ function isChecked(array,value){    //checks if checkbox was selected
     return isItIn;
 }
 // TODO: Create a function to write README file
-function writeToFile(fileName, data) {   //write  file to data
-  fs.writeFile(fileName, data, (err) => err ? console.error(err) : console.log('README created successfully'));
+function writeToFile(fileName, data) {   //write data to file
+  fs.writeFile(fileName, data, (err) => err ? console.error(err) : console.log('\n*\n***README created successfully***'));
 }
 // TODO: Create a function to initialize app
  function init() {
   inquirer.prompt(readmeInquiry)
   .then((response) =>{
-    const readMeDoc = generateMarkdown(response);       //generate README
-    writeToFile("README.md",readMeDoc);                 //call function to write file
+    const readMeDoc = generateMarkdown(response);               //generate README
+    writeToFile("README.md",readMeDoc);                      //call function to write file
   })
-  //.catch(() => console.log("Oops, Something went wrong!"));     //error message to return on error
+  .catch(() => console.log("Oops, Something went wrong!"));     //error message to return on error
 }
 // Function call to initialize app
 init();
