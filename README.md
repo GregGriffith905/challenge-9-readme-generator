@@ -14,9 +14,9 @@ The project was creatied to solve a homework assignment. It simplifies the proce
 - [Questions](#questions)
 
 ## Video Walkthrough
-
+```md
 <iframe src="https://drive.google.com/file/d/1NlbRsQo8tuBlNR1dzByz9EYo_FSYoI_s/preview" width="640" height="480"></iframe>
-
+```
 https://drive.google.com/file/d/1NlbRsQo8tuBlNR1dzByz9EYo_FSYoI_s/view
 
 ## Installation
@@ -42,7 +42,8 @@ This project is licensed under the terms of the [MIT License](https://choosealic
 
 -With the exception of "Title" field, other fields may be left blank.
 -App removes blank fields from final README before saving to file.
--Give user option to create basic page or add more detailed sections.-Give user option to add contact details to receive questions.
+-Give user option to create basic page or add more detailed sections.
+-Give user option to add contact details to receive questions.
 
 ## Questions
 
