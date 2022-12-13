@@ -15,10 +15,10 @@ The project was creatied to solve a homework assignment. It simplifies the proce
 - [Questions](#questions)
 
 ## Walkthrough
-```md
+
 [![videolink](./Develop/videowalkthrough.jpeg)](https://drive.google.com/file/d/1NlbRsQo8tuBlNR1dzByz9EYo_FSYoI_s/view
 )
-```
+
 https://drive.google.com/file/d/1NlbRsQo8tuBlNR1dzByz9EYo_FSYoI_s/view
 
 ## Installation
@@ -31,10 +31,10 @@ Once the file is initialized you will be asked a number of question to gather in
 
 ## Credits
 
--https://www.npmjs.com/package/inquirer - A collection of common interactive command line user interfaces.
--https://github.com/SBoudrias/Inquirer.js/tree/master/packages/inquirer/examples - examples using inquirer
--https://choosealicense.com/licenses/   - Open source licenses grant permission for anybody to use, modify, and share licensed software for any purpose, subject to conditions preserving the provenance and openness of the software.
--https://gist.github.com/lukas-h/2a5d00690736b4c3a7ba - Collection of License badges for your Project's README file. This list includes the most common open source and open data licenses.
+- https://www.npmjs.com/package/inquirer - A collection of common interactive command line user interfaces.
+- https://github.com/SBoudrias/Inquirer.js/tree/master/packages/inquirer/examples - examples using inquirer
+- https://choosealicense.com/licenses/   - Open source licenses grant permission for anybody to use, modify, and share licensed software for any purpose, subject to conditions preserving the provenance and openness of the software.
+- https://gist.github.com/lukas-h/2a5d00690736b4c3a7ba - Collection of License badges for your Project's README file. This list includes the most common open source and open data licenses.
 
 ## License
 
@@ -42,10 +42,10 @@ This project is licensed under the terms of the [MIT License](https://choosealic
 
 ## Features
 
--With the exception of "Title" field, other fields may be left blank.
--App removes blank fields from final README before saving to file.
--Give user option to create basic page or add more detailed sections.
--Give user option to add contact details to receive questions.
+- With the exception of "Title" field, other fields may be left blank.
+- App removes blank fields from final README before saving to file.
+- Give user option to create basic page or add more detailed sections.
+- Give user option to add contact details to receive questions.
 
 ## Questions
 
